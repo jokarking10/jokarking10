@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>You Came Back Game</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.min.js"></script>
+    <style>
+        body { margin: 0; }
+    </style>
+</head>
+<body>
+    <script>
+        const config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        let player;
+        let goal;
+        let cursors;
+
+        const game = new Phaser.Game(config);
+
+        function preload() {
+            // Load assets
+            this.load.image('player', 'https://i.imgur.com/8QZQZ.png'); // Player image
+            this.load.image('goal', 'https://i.imgur.com/9Q9Q9.png');   // Goal image
+        }
+
+        function create() {
+            // Add player
+            player = this.physics.add.sprite(400, 500, 'player');
+            player.setCollideWorldBounds(true);
+
+            // Add goal
+            goal = this.physics.add.sprite(400, 100, 'goal');
+
+            // Enable keyboard input
+            cursors = this.input.keyboard.createCursorKeys();
+        }
+
+        function update() {
+            // Player movement
+            if (cursors.left.isDown) {
+                player.setVelocityX(-160);
+            } else if (cursors.right.isDown) {
+                player.setVelocityX(160);
+            } else {
+                player.setVelocityX(0);
+            }
+
+            if (cursors.up.isDown) {
+                player.setVelocityY(-160);
+            } else if (cursors.down.isDown) {
+                player.setVelocityY(160);
+            } else {
+                player.setVelocityY(0);
+            }
+
+            // Check if player reaches the goal
+            if (Phaser.Geom.Intersects.RectangleToRectangle(player.getBounds(), goal.getBounds())) {
+                alert("You Came Back!");
+                this.scene.restart();
+            }
+        }
+    </script>
+</body>
+</html>
